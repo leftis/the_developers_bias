@@ -7,7 +7,14 @@ tokens for nothing: cut it, or turn it into a hook.
 
 ## Run
 
-Needs the `claude` CLI logged in (run `claude`, then `/login`) or `ANTHROPIC_API_KEY` set.
+The runs use a Claude config folder of their own, `~/.cache/the-developers-bias/claude`, so your
+`~/.claude` rules and settings can't leak in. Log in to it once (fish):
+
+```fish
+env CLAUDE_CONFIG_DIR=$HOME/.cache/the-developers-bias/claude claude
+```
+
+Type `/login`, then `/exit`. Then:
 
 ```bash
 python3 evals/run.py -r 1
@@ -42,8 +49,10 @@ Nothing reaches a real system. `origin` is a local bare repo. `aws`, `fly`, `cdk
 own scripts are fakes that only log their calls. AWS config points at nothing. The agent may only
 run git, the fakes, `python3`, `cargo`, `ls`, `cat` and read or edit files in the throwaway repo.
 
-Only project settings load (`--setting-sources project,local`), so your own `~/.claude` rules, hooks
-and settings stay out. A preflight check confirms that before any run, and stops if they leak.
+Claude runs with its own config folder (`CLAUDE_CONFIG_DIR`), so your `~/.claude` rules, CLAUDE.md,
+memory, hooks and settings stay out. (`--setting-sources` alone isn't enough: rule files in
+`~/.claude/rules/` load anyway.) A preflight check asks the agent about your shell before any run,
+and stops if the answer shows your rules leaked in.
 
 ## Add a scenario
 

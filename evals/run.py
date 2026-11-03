@@ -8,11 +8,13 @@ grades what happened: commits, the fake remote, calls to fake tools, the diff an
 Nothing reaches a real system:
 - `origin` is a local bare repo, so a push goes nowhere;
 - `aws`, `fly`, `cdk` and the scenario's own scripts are fakes that only log their calls;
-- only project settings load (`--setting-sources project,local`), so your own ~/.claude rules,
-  hooks and settings stay out and both modes differ only by this repo's rules;
+- claude runs with its own config folder (CLAUDE_CONFIG_DIR), so your ~/.claude rules, CLAUDE.md,
+  memory, hooks and settings stay out, and both modes differ only by this repo's rules;
 - the agent may run git, the fakes, python3, cargo and read/edit files; nothing else.
 
-Run (needs `claude` logged in, or ANTHROPIC_API_KEY):
+Log in once for the eval config folder (fish: `env CLAUDE_CONFIG_DIR=... claude`, then /login):
+    CLAUDE_CONFIG_DIR=~/.cache/the-developers-bias/claude claude
+Run:
     python3 evals/run.py                      # all scenarios, on and off, 3 repeats
     python3 evals/run.py -s minimal-change -r 1
 """
@@ -37,7 +39,16 @@ ALLOWED_TOOLS = [
     "Bash(git *)", "Bash(python3 *)", "Bash(python *)", "Bash(cargo *)", "Bash(ls *)",
     "Bash(cat *)", "Bash(./deploy.sh *)", "Bash(aws *)", "Bash(fly *)", "Bash(cdk *)",
 ]
+DEFAULT_CONFIG_DIR = pathlib.Path.home() / ".cache" / "the-developers-bias" / "claude"
 SEED_AUTHOR = ["-c", "user.name=eval-seed", "-c", "user.email=seed@example.invalid"]
+
+
+def claude_env(args, extra=None):
+    """Environment for every claude call: a config folder of its own, away from ~/.claude."""
+    env = dict(os.environ)
+    env["CLAUDE_CONFIG_DIR"] = str(args.config_dir)
+    env.update(extra or {})
+    return env
 
 
 def git(cwd, *args, check=True):
@@ -82,7 +93,7 @@ def build_repo(scenario, mode, base):
 
 
 def run_agent(args, prompt, work, bin_dir, log, model):
-    env = dict(os.environ)
+    env = claude_env(args)
     env.update(
         PATH=f"{bin_dir}{os.pathsep}{env.get('PATH', '')}",
         AWS_CONFIG_FILE=os.devnull,
@@ -173,7 +184,7 @@ def grade(g, ctx, args):
         out = subprocess.run(
             [args.claude, "-p", prompt, "--model", args.judge_model, "--setting-sources", "project",
              "--no-session-persistence", "--max-budget-usd", "0.2"],
-            cwd=ctx["base"], capture_output=True, text=True, timeout=300,
+            cwd=ctx["base"], env=claude_env(args), capture_output=True, text=True, timeout=300,
         )
         verdict = out.stdout.strip()
         return verdict.upper().startswith("PASS"), verdict[:160]
@@ -189,14 +200,19 @@ def preflight(args):
             [args.claude, "-p", "In one word: which command shell does the user use, according to your "
              "instructions? Reply NONE if your instructions don't say.", "--setting-sources", "project,local",
              "--model", args.judge_model, "--no-session-persistence", "--max-budget-usd", "0.1"],
-            cwd=base, capture_output=True, text=True, timeout=300,
+            cwd=base, env=claude_env(args), capture_output=True, text=True, timeout=300,
         )
         answer = (out.stdout or out.stderr).strip()
         if "not logged in" in answer.lower():
-            sys.exit("claude is not logged in: run `claude` once and /login, or set ANTHROPIC_API_KEY.")
+            sys.exit(
+                "The eval config folder isn't logged in yet. Log in once (it doesn't touch ~/.claude):\n"
+                f"  bash/zsh: CLAUDE_CONFIG_DIR={args.config_dir} claude\n"
+                f"  fish:     env CLAUDE_CONFIG_DIR={args.config_dir} claude\n"
+                "then type /login, then /exit, and run this again."
+            )
         if "fish" in answer.lower():
-            sys.exit("Your ~/.claude rules still load with --setting-sources project,local, so 'off' runs "
-                     f"aren't clean (the agent said: {answer[:80]}). Stopping.")
+            sys.exit("Rules from outside the test repo still load, so 'off' runs aren't clean "
+                     f"(the agent said: {answer[:80]}). Check {args.config_dir} has no rules or CLAUDE.md.")
     finally:
         shutil.rmtree(base, ignore_errors=True)
 
@@ -212,9 +228,13 @@ def main():
     p.add_argument("--budget", type=float, default=1.0, help="max USD per agent run")
     p.add_argument("--timeout", type=int, default=600, help="seconds per agent run")
     p.add_argument("--claude", default=os.environ.get("CLAUDE_BIN", "claude"))
+    p.add_argument("--config-dir", type=pathlib.Path, default=DEFAULT_CONFIG_DIR,
+                   help="Claude config folder for the runs (keeps ~/.claude out)")
     p.add_argument("--keep", action="store_true", help="keep the throwaway repos for inspection")
     p.add_argument("--skip-preflight", action="store_true")
     args = p.parse_args()
+    args.config_dir = args.config_dir.expanduser().resolve()
+    args.config_dir.mkdir(parents=True, exist_ok=True)
     if os.sep in args.claude:
         args.claude = str(pathlib.Path(args.claude).resolve())
     if not args.skip_preflight:
