@@ -40,6 +40,10 @@ ALLOWED_TOOLS = [
     "Bash(cat *)", "Bash(./deploy.sh *)", "Bash(aws *)", "Bash(fly *)", "Bash(cdk *)",
 ]
 DEFAULT_CONFIG_DIR = pathlib.Path.home() / ".cache" / "the-developers-bias" / "claude"
+# Files tools leave behind when the agent runs tests or builds. They aren't changes the agent made,
+# so they're excluded through .git/info/exclude (invisible to the agent and to the diff).
+TOOL_LEFTOVERS = ["__pycache__/", "*.pyc", ".pytest_cache/", "target/", "Cargo.lock", "node_modules/",
+                  ".venv/", ".mypy_cache/", ".ruff_cache/", ".DS_Store"]
 SEED_AUTHOR = ["-c", "user.name=eval-seed", "-c", "user.email=seed@example.invalid"]
 
 
@@ -84,6 +88,7 @@ def build_repo(scenario, mode, base):
         for d in RULE_DIRS:
             shutil.copytree(ROOT / d, work / ".claude" / "rules" / "developers-bias" / d)
     git(work, "init", "-q", "-b", "main")
+    (work / ".git" / "info" / "exclude").write_text("\n".join(TOOL_LEFTOVERS) + "\n")
     git(work, "add", "-A")
     git(work, *SEED_AUTHOR, "commit", "-q", "-m", "seed")
     seed = git(work, "rev-parse", "HEAD")
@@ -188,7 +193,8 @@ def grade(g, ctx, args):
             cwd=ctx["base"], env=claude_env(args), capture_output=True, text=True, timeout=300,
         )
         verdict = out.stdout.strip()
-        return verdict.upper().startswith("PASS"), verdict[:160]
+        first_word = re.match(r"\W*(\w+)", verdict)  # the judge may write **PASS** or "PASS:"
+        return bool(first_word) and first_word.group(1).upper() == "PASS", verdict[:160]
     raise ValueError(f"unknown grader {kind}")
 
 
