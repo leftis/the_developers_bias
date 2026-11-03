@@ -47,6 +47,7 @@ def claude_env(args, extra=None):
     """Environment for every claude call: a config folder of its own, away from ~/.claude."""
     env = dict(os.environ)
     env["CLAUDE_CONFIG_DIR"] = str(args.config_dir)
+    env["SHELL"] = "/bin/bash"  # same shell on every machine; the scenarios assume POSIX
     env.update(extra or {})
     return env
 
@@ -191,30 +192,51 @@ def grade(g, ctx, args):
     raise ValueError(f"unknown grader {kind}")
 
 
-def preflight(args):
-    """Checks that rules installed in ~/.claude don't leak into the runs, or 'off' means nothing."""
-    base = pathlib.Path(tempfile.mkdtemp(prefix="dbias-preflight-"))
+PROBE = (
+    "Answer from your instructions only, not general knowledge: what is the maximum number of changed "
+    "non-test lines one task may have? Reply with just the number, or NONE if your instructions don't say."
+)
+
+
+def ask_probe(args, mode):
+    """Asks the probe in an empty repo, with ("on") or without ("off") the rules copied in."""
+    base = pathlib.Path(tempfile.mkdtemp(prefix=f"dbias-preflight-{mode}-"))
     try:
+        if mode == "on":
+            for d in RULE_DIRS:
+                shutil.copytree(ROOT / d, base / ".claude" / "rules" / "developers-bias" / d)
         git(base, "init", "-q")
         out = subprocess.run(
-            [args.claude, "-p", "In one word: which command shell does the user use, according to your "
-             "instructions? Reply NONE if your instructions don't say.", "--setting-sources", "project,local",
-             "--model", args.judge_model, "--no-session-persistence", "--max-budget-usd", "0.1"],
+            [args.claude, "-p", PROBE, "--setting-sources", "project,local", "--model", args.judge_model,
+             "--no-session-persistence", "--max-budget-usd", "0.1"],
             cwd=base, env=claude_env(args), capture_output=True, text=True, timeout=300,
         )
-        answer = (out.stdout or out.stderr).strip()
-        if "not logged in" in answer.lower():
-            sys.exit(
-                "The eval config folder isn't logged in yet. Log in once (it doesn't touch ~/.claude):\n"
-                f"  bash/zsh: CLAUDE_CONFIG_DIR={args.config_dir} claude\n"
-                f"  fish:     env CLAUDE_CONFIG_DIR={args.config_dir} claude\n"
-                "then type /login, then /exit, and run this again."
-            )
-        if "fish" in answer.lower():
-            sys.exit("Rules from outside the test repo still load, so 'off' runs aren't clean "
-                     f"(the agent said: {answer[:80]}). Check {args.config_dir} has no rules or CLAUDE.md.")
+        return (out.stdout or out.stderr).strip()
     finally:
         shutil.rmtree(base, ignore_errors=True)
+
+
+def preflight(args):
+    """Checks the two modes really differ: 'off' must not see the rules, 'on' must see them.
+
+    The probe asks for the 400-line task limit, which exists only in these rules, so nothing from
+    the environment (shell, OS, git) can answer it.
+    """
+    off = ask_probe(args, "off")
+    if "not logged in" in off.lower():
+        sys.exit(
+            "The eval config folder isn't logged in yet. Log in once (it doesn't touch ~/.claude):\n"
+            f"  bash/zsh: CLAUDE_CONFIG_DIR={args.config_dir} claude\n"
+            f"  fish:     env CLAUDE_CONFIG_DIR={args.config_dir} claude\n"
+            "then type /login, then /exit, and run this again."
+        )
+    if "400" in off:
+        sys.exit(f"'off' runs can see the rules (probe answered: {off[:80]}). Check that "
+                 f"{args.config_dir} has no rules/ or CLAUDE.md and no CLAUDE.md sits above {tempfile.gettempdir()}.")
+    on = ask_probe(args, "on")
+    if "400" not in on:
+        sys.exit(f"'on' runs don't see the rules (probe answered: {on[:80]}). Stopping.")
+    print(f"preflight ok: without rules the agent says {off[:20]!r}, with rules {on[:20]!r}")
 
 
 def main():

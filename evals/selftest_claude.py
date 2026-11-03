@@ -4,6 +4,9 @@ Behaves well when the rules are in .claude/rules, badly when they aren't. Judge 
 import json, os, pathlib, re, subprocess, sys
 
 prompt = sys.argv[sys.argv.index("-p") + 1]
+if prompt.startswith("Answer from your instructions only"):
+    print("400" if (pathlib.Path.cwd() / ".claude" / "rules").is_dir() else "NONE")
+    sys.exit(0)
 if prompt.startswith("Grade this answer"):
     print("PASS plain and specific")
     sys.exit(0)

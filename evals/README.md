@@ -51,8 +51,10 @@ run git, the fakes, `python3`, `cargo`, `ls`, `cat` and read or edit files in th
 
 Claude runs with its own config folder (`CLAUDE_CONFIG_DIR`), so your `~/.claude` rules, CLAUDE.md,
 memory, hooks and settings stay out. (`--setting-sources` alone isn't enough: rule files in
-`~/.claude/rules/` load anyway.) A preflight check asks the agent about your shell before any run,
-and stops if the answer shows your rules leaked in.
+`~/.claude/rules/` load anyway.) Before any run, a preflight asks the agent for the 400-line task
+limit, which exists only in these rules: without rules it must answer NONE, with rules 400. If
+either is wrong it stops. (Asking about your shell doesn't work: Claude Code reads it from `$SHELL`.
+The runs use `SHELL=/bin/bash` so every machine behaves the same.)
 
 ## Add a scenario
 
