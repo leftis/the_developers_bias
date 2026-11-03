@@ -1,0 +1,18 @@
+{
+  "feature": "NNN-slug",
+  "spec": "SPEC.md",
+  "tasks": [
+    {
+      "id": "01",
+      "title": "Short imperative title",
+      "spec_sections": ["Boundaries", "Data"],
+      "depends_on": [],
+      "files": ["path/to/file.rs"],
+      "max_changed_lines": 400,
+      "check": "cargo test -p core parses_new_field",
+      "demo": "Run X, open Y, see Z",
+      "flag": null,
+      "status": "todo"
+    }
+  ]
+}
