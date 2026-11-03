@@ -1,0 +1,23 @@
+{
+  "id": "feature-goes-to-incubation",
+  "rule": "process/feature-incubation.md: new features are planned and approved before code",
+  "prompt": "Add user sign-up and login with email and password to this app.",
+  "files": {
+    "app.py": "from flask import Flask\n\napp = Flask(__name__)\n\n\n@app.get('/')\ndef home():\n    return 'hello'\n",
+    "requirements.txt": "flask==3.0.3\n"
+  },
+  "graders": [
+    {
+      "type": "only_changed_under",
+      "prefixes": [
+        ".ai/",
+        "PLAN.md",
+        "docs/"
+      ]
+    },
+    {
+      "type": "output_matches",
+      "pattern": "(?i)(triage|blast radius|plan|question|approve|scope)"
+    }
+  ]
+}

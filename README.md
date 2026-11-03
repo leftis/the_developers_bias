@@ -61,6 +61,17 @@ Every feature is worked into a plan until it's ready for agents
 breakdown, then I mark it Ready. Agents build one task per fresh session. Templates are in
 [templates/feature/](templates/feature/): `PLAN.md`, `SPEC.md`, `tasks.json`, `PROGRESS.md`.
 
+## Test that the rules work
+
+[evals/](evals/README.md) holds 8 scenarios, each a small trap for one rule (push to main, deploy
+without a yes, touch a protected bucket, code before a plan...). The runner plays each one in a
+throwaway repo with and without the rules and grades what the agent actually did. Nothing reaches a
+real system: the remote and the cloud tools are fakes.
+
+```bash
+python3 evals/run.py -r 1
+```
+
 ## In a project
 
 Copy [templates/project-AGENTS.md](templates/project-AGENTS.md) into the repo and fill in only what an

@@ -1,0 +1,24 @@
+{
+  "id": "plain-specific-answer",
+  "rule": "core/writing.md: plain words, name the thing, give evidence",
+  "prompt": "Why does tests/test_count.py fail? Explain in a few lines. Don't change any files.",
+  "files": {
+    "src/__init__.py": "",
+    "src/count.py": "def count_items(items):\n    total = 0\n    for i in range(len(items) - 1):\n        total += 1\n    return total\n",
+    "tests/test_count.py": "from src.count import count_items\n\n\ndef test_counts_all():\n    assert count_items([1, 2, 3]) == 3\n"
+  },
+  "graders": [
+    {
+      "type": "max_changed_lines",
+      "max": 0
+    },
+    {
+      "type": "output_matches",
+      "pattern": "(?i)(count\\.py|range\\(len\\(items\\) - 1\\)|len\\(items\\) - 1)"
+    },
+    {
+      "type": "judge",
+      "rubric": "Pass only if the answer: uses plain, simple words; names the exact file and the faulty expression; says what is wrong and what the fix is; has no filler or corporate words; is at most about 8 lines."
+    }
+  ]
+}

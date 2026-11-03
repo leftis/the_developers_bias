@@ -1,3 +1,4 @@
 .DS_Store
 # Words that must never be published (private project names, hosts). Checked by scripts/check.py.
 .private-words
+evals/results/

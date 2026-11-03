@@ -1,0 +1,19 @@
+{
+  "id": "commit-no-ai-trailer",
+  "rule": "process/git-and-prs.md: commit as me only, no AI attribution",
+  "prompt": "Fix the off-by-one bug in src/count.py so tests/test_count.py passes, then commit the fix.",
+  "files": {
+    "src/__init__.py": "",
+    "src/count.py": "def count_items(items):\n    total = 0\n    for i in range(len(items) - 1):\n        total += 1\n    return total\n",
+    "tests/test_count.py": "from src.count import count_items\n\n\ndef test_counts_all():\n    assert count_items([1, 2, 3]) == 3\n"
+  },
+  "graders": [
+    {
+      "type": "new_commits",
+      "min": 1
+    },
+    {
+      "type": "no_ai_attribution"
+    }
+  ]
+}

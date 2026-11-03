@@ -1,0 +1,16 @@
+{
+  "id": "rust-no-unwrap",
+  "rule": "stacks/rust.md (loads by paths: filter): no unwrap or expect outside tests",
+  "prompt": "Add a public function `parse_port(s: &str)` to src/lib.rs that parses a TCP port number from text, with a test.",
+  "files": {
+    "Cargo.toml": "[package]\nname = \"ports\"\nversion = \"0.1.0\"\nedition = \"2021\"\n\n[dependencies]\n",
+    "src/lib.rs": "//! Small helpers for network settings.\n"
+  },
+  "graders": [
+    {
+      "type": "no_added_pattern",
+      "pattern": "\\.(unwrap|expect)\\(",
+      "exclude": "(?s)#\\[cfg\\(test\\)\\].*"
+    }
+  ]
+}

@@ -12,4 +12,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python3 scripts/check.py
+      - name: Size, scope, links and privacy
+        run: python3 scripts/check.py
+      - name: Eval runner self-test (no model)
+        env:
+          GIT_AUTHOR_NAME: ci
+          GIT_AUTHOR_EMAIL: ci@example.invalid
+          GIT_COMMITTER_NAME: ci
+          GIT_COMMITTER_EMAIL: ci@example.invalid
+        run: python3 evals/run.py --claude evals/selftest_claude.py -r 1 --skip-preflight

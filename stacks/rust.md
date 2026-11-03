@@ -13,11 +13,13 @@ paths:
   the project allows), and `cargo test` all pass in CI.
 - Workspace: a `*-core` library with no I/O and a `*-svc` binary. Put small shared types in core
   instead of a separate crate unless something else uses them.
-- Errors: `thiserror` types in the library, `anyhow` with `.context(...)` in the binary.
+- Errors: `thiserror` types in the library, `anyhow` with `.context(...)` in the binary. No
+  `unwrap()` or `expect()` outside tests: return the error with `?`. Why: a bad input must not crash
+  a running service.
 - Config with `clap` derive, each field `env = "..."` with a default, so env vars and flags both
   work.
-- `tokio` for async, `tracing` for logs, `mimalloc` as the
-  allocator, `metrics` + `metrics-exporter-prometheus` for metrics.
+- `tokio` for async, `tracing` for logs, `mimalloc` as the allocator,
+  `metrics` + `metrics-exporter-prometheus` for metrics.
 
 ## Tests
 
