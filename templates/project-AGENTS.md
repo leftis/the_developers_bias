@@ -19,6 +19,7 @@ deleting it, so nobody brings it back.
 
 | What | Value | Checked |
 |---|---|---|
+| Product languages (i18n) | | |
 | Region / profile | | |
 | Live URLs | | |
 | IDs (pools, clients, themes) | | |

@@ -18,5 +18,5 @@ paths:
 - Evaluate honestly: leave-one-day-out (or leave-one-group-out) validation, and report MAE plus a
   tail number (P90). Say how much data and how many days it rests on.
 - Keep raw data outside git. Note where it lives (bucket, region, profile) in the project's notes.
-- Before training on a new dataset version, check what changed in the source format and say which
+- Before using a new version of a dataset, check what changed in the source format and say which
   fields are new.

@@ -15,11 +15,11 @@ paths:
 Expose `/metrics` (Prometheus) from the service itself. Count what a person would ask about:
 
 - Input: messages read / unreadable / skipped as old, and the time of the last one.
-- Decisions: items handled per outcome (predicted, not covered, missing data), with unknown keys
-  labelled (for example an unknown track name).
+- Decisions: items handled per outcome (handled, not covered, missing data), with unknown keys
+  labelled (for example a value the service has no rule for).
 - Output: messages published per type and event.
-- Quality: how early the output was sent (lead time), and how late the inputs it depends on arrive.
-- Health: broker connected (0/1), disconnects, items in memory, model version info, reload results.
+- Quality: how early the output arrives before it's needed, and how late its inputs arrive.
+- Health: broker connected (0/1), disconnects, items in memory, version info of loaded data or models, reload results.
 
 ## Traps
 

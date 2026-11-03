@@ -27,6 +27,6 @@ Why: vague PR text ("now sends fixed operations") had to be rewritten before it 
 
 ## Language
 
-- Answer in the language I ask in (for example Greek) when I ask for it.
-- User-facing product text for Greek users is Greek, through i18n keys. Never hardcode English
-  strings in the UI.
+- Answer in the language I ask in, when I ask for it.
+- User-facing product text goes through i18n keys, in the languages the project file lists. Never
+  hardcode UI strings in any language.

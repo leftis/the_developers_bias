@@ -16,7 +16,7 @@ paths:
   library with a C++ WASM core. Share one crate between the native build tool and the browser.
 - No `any`, no `as` casts or `!` that bypass a real type.
 - Every component handles loading, error and empty states.
-- All user-facing strings go through i18n files (Greek `el` + English `en`). Never show English
-  error text to Greek users.
-- Use the platform's component library (Polaris in Shopify admin) instead of hand-made HTML/CSS.
+- All user-facing strings go through i18n files, one per language the project file lists. Users see
+  errors in their own language, never a hardcoded fallback.
+- Use the platform's component library (for example the host app's design system) instead of hand-made HTML/CSS.
 - `useEffect` is not for deriving state.

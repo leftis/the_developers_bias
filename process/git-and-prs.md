@@ -33,6 +33,6 @@
 
 ## Splitting a repo
 
-To share part of a codebase without its history (for example, inference without training):
+To share part of a codebase without its history (for example, the runnable service without the research code):
 start a **new repo**, copy only the needed files, and commit them fresh. Removing files from an
 existing repo still leaves them in its history.

@@ -19,7 +19,7 @@ paths:
 - **Schema first, no hardcoding:** colors, fonts, sizes, text, images, handles and metafield keys
   come from section/block settings or CSS variables. Defaults must render a complete component.
 - `{% render %}` with parameters, never `{% include %}`. Snippets don't read `section.settings`.
-- Every string through `{{ 'key' | t }}` with Greek in `locales/el.json`.
+- Every string through `{{ 'key' | t }}` in every language the store sells in (`locales/*.json`).
 - Images: explicit `width`/`height`, `loading="lazy"`, no layout shift. Scripts `defer`/`async`.
   Respect `prefers-reduced-motion`. `aria-label` on icon buttons. Tap targets ≥ 48 px.
 - Vendor CSS you can't edit: match its specificity first; `!important` only when you can't, with a

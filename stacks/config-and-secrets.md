@@ -45,10 +45,14 @@ paths:
   small.
 - Bind admin UIs to `127.0.0.1`, not all interfaces.
 
-## Typing a secret in instead of storing it (fish)
+## Typing a secret in instead of storing it
 
 ```fish
-read -s -x -P "Broker URL: " AMQP_URL
+read -s -x -P "Secret URL: " SERVICE_URL
+```
+
+```bash
+read -rs -p "Secret URL: " SERVICE_URL && export SERVICE_URL
 ```
 
 It's then in no file and not in shell history.

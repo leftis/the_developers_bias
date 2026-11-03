@@ -16,15 +16,16 @@ paths:
 - Errors: `thiserror` types in the library, `anyhow` with `.context(...)` in the binary.
 - Config with `clap` derive, each field `env = "..."` with a default, so env vars and flags both
   work.
-- `tokio` for async, `lapin` for AMQP, `quick-xml` for XML, `tracing` for logs, `mimalloc` as the
+- `tokio` for async, `tracing` for logs, `mimalloc` as the
   allocator, `metrics` + `metrics-exporter-prometheus` for metrics.
 
 ## Tests
 
 - Scenario tests drive the core with a fake clock through whole lifecycles (normal, delayed,
   cancelled, restarted with stale state).
-- **Golden values:** when a model is trained elsewhere (Python), export a few input → output pairs
-  from training and assert the Rust side matches them. That catches drift between the two.
+- **Golden values:** when logic is ported from another implementation (a Python prototype, a
+  reference library), export input → output pairs from the original and assert the port matches.
+  That catches drift between the two.
 - Pin enum lists in a test (exact variants plus an exhaustive `match`) so adding a variant forces a
   contract update.
 - Regenerate example fixtures from tests behind an env flag, never by hand.

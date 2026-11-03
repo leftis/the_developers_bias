@@ -2,7 +2,7 @@
 
 ## Read only, by default
 
-Why: live stores, tax submissions and client brokers have real users and no undo.
+Why: live systems have real users, real money or legal weight, and often no undo.
 
 - On production or a client's system, **look, don't touch**. Reading stats, queue depths, bindings,
   records and logs is fine. Creating, changing or deleting anything needs my yes **for that one
@@ -17,14 +17,14 @@ Why: live stores, tax submissions and client brokers have real users and no undo
 ## Protected resources
 
 - Each project lists its protected resources (see [the template](~/projects/agentic-coding-base/templates/project-AGENTS.md)).
-  Don't touch them **in any way**, not even a read-only listing. Example: a photo bucket with
-  irreplaceable originals and no backup.
+  Don't touch them **in any way**, not even a read-only listing. Typical case: storage holding
+  irreplaceable originals with no backup.
 - A broad OK ("you can deploy it") does not lift a protected-resource rule.
 - Never delete an infrastructure stack unless told to.
 
 ## Production paths
 
-- **Never test against production APIs** (tax, payments). Use the sandbox flag. Passing the sandbox
+- **Never test against production APIs** (payments, government or other regulated services). Use the sandbox flag. Passing the sandbox
   doesn't prove production will accept it.
 - Sandbox integration tests run **only in CI**, gated on secrets, skip (not fail) when secrets are
   missing, and carry a big warning banner at the top of the file.
@@ -32,7 +32,7 @@ Why: live stores, tax submissions and client brokers have real users and no undo
   Flags like `--require-approval never` are fine only after that yes.
 - Where `main` auto-deploys (theme stores, CD), never push to `main`. Use a branch or `staging`.
 - Never change an encryption scheme, an ID or serial formula, or a public API without a migration
-  or deprecation path. Old data and old clients depend on them.
+  or deprecation path. Stored data and existing callers depend on them.
 
 ## Secrets
 

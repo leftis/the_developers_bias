@@ -10,14 +10,14 @@ that came up in more than one project are the core of the framework.
 - State limits: what you didn't change or couldn't verify
 - Recommend one option with reasons instead of a menu
 - Label claims `[fact]` / `[assumption]` / `[to verify]`
-- User-facing text in Greek, through i18n keys; never hardcode English
+- User-facing text in the product's languages, through i18n keys; never hardcode UI strings
 - My shell is fish; give fish commands
 
 ## 2. Safety: production, client systems, data, secrets
 
 - Default is **read only** on live systems; ask before every write, list what will change
 - Some resources are untouchable, even read-only (irreplaceable data, no backup)
-- Never test against production; use sandboxes (`use_sandbox: true`)
+- Never test against production; use the provider's sandbox
 - Sandbox integration tests run only in CI, gated on secrets, self-skip locally, big warning banner
 - Don't create resources (queues, etc.) on someone else's production
 - A push to `main` may auto-deploy to production: never push there directly
@@ -52,7 +52,7 @@ that came up in more than one project are the core of the framework.
 - TDD: failing test first
 - Never edit an existing test just to pass; log the reason for any test change
 - No `unwrap` in production paths; typed errors in libs
-- Golden tests for generated output (XML, model parity)
+- Golden tests for generated output and for ports of another implementation
 - Never commit commented-out code; no TODO without an issue
 - Don't remove `#[allow]` / lint disables without knowing why
 - Provider/integration-specific logic lives in its own module behind a trait
