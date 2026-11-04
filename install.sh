@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Installs The Developer's Bias into ~/.claude/rules/developers-bias/.
+# Installs The Developer's Bias into ~/.claude/rules/developers-bias/, and merges
+# settings/settings.json into ~/.claude/settings.json (other keys are kept).
 #
 # Claude Code loads ~/.claude/rules/ in every project with no approval prompt. core/ and process/
 # load in every session; stacks/ and platforms/ carry `paths:` filters, so they load only when an
@@ -20,6 +21,10 @@ mkdir -p "$dest"
 for dir in core process stacks platforms; do
   rsync -a --delete --itemize-changes $dry "$src/$dir/" "$dest/$dir/"
 done
+
+# Claude Code's own prompt tells it to add a Co-Authored-By trailer; that beats the rule text
+# (evals/commit-no-ai-trailer failed with the rules on). The attribution setting turns it off.
+python3 "$src/scripts/merge_settings.py" "${CLAUDE_SETTINGS_FILE:-$HOME/.claude/settings.json}" $dry
 
 if [[ -z "$dry" ]]; then
   echo "Installed to $dest"

@@ -87,6 +87,8 @@ def build_repo(scenario, mode, base):
     if mode == "on":
         for d in RULE_DIRS:
             shutil.copytree(ROOT / d, work / ".claude" / "rules" / "developers-bias" / d)
+        # install.sh merges this into ~/.claude/settings.json; "on" must test what gets installed
+        shutil.copy(ROOT / "settings" / "settings.json", work / ".claude" / "settings.json")
     git(work, "init", "-q", "-b", "main")
     (work / ".git" / "info" / "exclude").write_text("\n".join(TOOL_LEFTOVERS) + "\n")
     git(work, "add", "-A")

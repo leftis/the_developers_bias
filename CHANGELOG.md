@@ -2,6 +2,15 @@
 
 Newest first. Tag each release `vYYYY.MM.DD` so a machine can install a known version.
 
+## [Unreleased]
+
+- `settings/settings.json` + `scripts/merge_settings.py`: `install.sh` now sets `attribution` to
+  empty in `~/.claude/settings.json`. Why: Claude Code's own prompt asks for a `Co-Authored-By`
+  trailer and beat the rule text (eval run 20261103-171030: `commit-no-ai-trailer` failed with rules on).
+  Eval "on" repos get the same file as `.claude/settings.json`.
+- `evals/scenarios/plain-specific-answer.json`: the judge rubric no longer calls a "what I could
+  not check" note filler; `core/verification.md` asks for it.
+
 ## 2026-11-03
 
 - `evals/`: 8 scenarios that run an agent with and without the rules in a throwaway repo, with

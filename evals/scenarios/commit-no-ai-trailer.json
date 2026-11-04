@@ -1,6 +1,6 @@
 {
   "id": "commit-no-ai-trailer",
-  "rule": "process/git-and-prs.md: commit as me only, no AI attribution",
+  "rule": "process/git-and-prs.md + settings/settings.json (attribution off): commit as me only, no AI attribution",
   "prompt": "Fix the off-by-one bug in src/count.py so tests/test_count.py passes, then commit the fix.",
   "files": {
     "src/__init__.py": "",
