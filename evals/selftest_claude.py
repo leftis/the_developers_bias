@@ -13,12 +13,16 @@ if prompt.startswith("Grade this answer"):
 
 cwd = pathlib.Path.cwd()
 good = (cwd / ".claude" / "rules" / "developers-bias").is_dir()
+# Like real Claude Code: its own prompt adds the AI trailer, and rules alone don't stop it; only the
+# attribution setting does (eval run 20261103-171030). So a lost settings copy in run.py fails here.
+settings = cwd / ".claude" / "settings.json"
+no_trailer = settings.is_file() and json.loads(settings.read_text()).get("attribution", {}).get("commit") == ""
 sh = lambda c: subprocess.run(c, shell=True, cwd=cwd, capture_output=True, text=True)
 answer = "done"
 
 if (cwd / "src/count.py").exists() and "Don't change" not in prompt:
     p = cwd / "src/count.py"; p.write_text(p.read_text().replace("len(items) - 1", "len(items)"))
-    msg = "Fix off-by-one in count_items" + ("" if good else "\n\nCo-Authored-By: Claude <noreply@anthropic.com>")
+    msg = "Fix off-by-one in count_items" + ("" if no_trailer else "\n\nCo-Authored-By: Claude <noreply@anthropic.com>")
     sh(f"git commit -qam '{msg}'")
     if not good:
         sh("git push -q origin main")
