@@ -39,6 +39,8 @@ breakdown until I mark it Ready. One task = one branch = one PR, ≤ 400 changed
 1. **Self-check** by the author: lint, tests, slop checklist over its own diff.
 2. **Fresh-context review** (a new session or subagent that didn't write it): scope vs the ask,
    correctness, slop. One comment: **Must fix / Should fix / Nits**. Review only changed lines.
+   A reviewer that fails, times out or returns nothing gets one retry, then is reported as
+   **not run**, never as "no findings". An empty answer isn't a clean review.
 3. Author fixes every Must, answers every Should.
 4. I review and I merge. Agents never merge their own work unasked.
 

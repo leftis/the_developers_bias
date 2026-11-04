@@ -4,6 +4,11 @@ Newest first. Tag each release `vYYYY.MM.DD` so a machine can install a known ve
 
 ## [Unreleased]
 
+- `process/feature-incubation.md`: Ready check now needs every design choice (schema, API path,
+  dependency, edge cases) decided in the spec, not left to the builder. Idea from
+  google/elephant-goldfish-model's implementation-readiness standard (Apache-2.0).
+- `process/change-size-and-review.md`: a reviewer that fails or returns nothing is retried once,
+  then reported as "not run", never as "no findings". Same source, `agents/synthesizer.md`.
 - `settings/settings.json` + `scripts/merge_settings.py`: `install.sh` now sets `attribution` to
   empty in `~/.claude/settings.json`. Why: Claude Code's own prompt asks for a `Co-Authored-By`
   trailer and beat the rule text (eval run 20261103-171030: `commit-no-ai-trailer` failed with rules on).

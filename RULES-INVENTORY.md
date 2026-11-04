@@ -39,6 +39,8 @@ that came up in more than one project are the core of the framework.
 - **Triage** before planning: score blast radius, risk, complexity, size (0–2) → Direct / Planned / Spec
 - Big work: design dialogue (one question at a time) → approved spec → tasks ≤ 400 lines / 10 files
 - Every agent PR gets a **fresh-context review** (scope, correctness, slop checklist) before the owner
+- A failed or empty reviewer is reported **not run**, never "no findings" (source: google/elephant-goldfish-model `agents/synthesizer.md`, 2026-11-04)
+- A Ready plan leaves **no design choice** to the builder (source: google/elephant-goldfish-model, implementation-readiness standard, 2026-11-04)
 - Re-triage when a change grows mid-flight
 - Version bump + CHANGELOG + user-facing docs/FAQ in the same commit
 - Agents write their own changelog entries, specific, newest date first
