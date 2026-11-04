@@ -17,14 +17,15 @@ if [[ "${1:-}" == "--dry-run" ]]; then dry="--dry-run"; fi
 
 python3 "$src/scripts/check.py" > /dev/null || { python3 "$src/scripts/check.py"; exit 1; }
 
+# Claude Code's own prompt tells it to add a Co-Authored-By trailer; that beats the rule text
+# (evals/commit-no-ai-trailer failed with the rules on). The attribution setting turns it off.
+# It runs first, so a broken settings file stops the install before any rule is copied.
+python3 "$src/scripts/merge_settings.py" "${CLAUDE_SETTINGS_FILE:-$HOME/.claude/settings.json}" $dry
+
 mkdir -p "$dest"
 for dir in core process stacks platforms; do
   rsync -a --delete --itemize-changes $dry "$src/$dir/" "$dest/$dir/"
 done
-
-# Claude Code's own prompt tells it to add a Co-Authored-By trailer; that beats the rule text
-# (evals/commit-no-ai-trailer failed with the rules on). The attribution setting turns it off.
-python3 "$src/scripts/merge_settings.py" "${CLAUDE_SETTINGS_FILE:-$HOME/.claude/settings.json}" $dry
 
 if [[ -z "$dry" ]]; then
   echo "Installed to $dest"
