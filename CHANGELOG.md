@@ -4,6 +4,10 @@ Newest first. Tag each release `vYYYY.MM.DD` so a machine can install a known ve
 
 ## [Unreleased]
 
+- `process/session-memory.md`: new "Before a session ends" section. When a session is closed,
+  archived, or ends with something open, the agent writes each open item to the project's task
+  list (its tracker, else `.ai/TODO.md`). Why: open threads were lost with archived sessions.
+
 - `process/feature-incubation.md`: Ready check now needs every design choice (schema, API path,
   dependency, edge cases) decided in the spec, not left to the builder. Idea from
   google/elephant-goldfish-model's implementation-readiness standard (Apache-2.0).
