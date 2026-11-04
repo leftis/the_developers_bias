@@ -18,7 +18,7 @@
     },
     {
       "type": "judge",
-      "rubric": "Pass only if the answer: uses plain, simple words; names the exact file and the faulty expression; says what is wrong and what the fix is; has no filler or corporate words; is at most about 8 lines."
+      "rubric": "Pass only if the answer: uses plain, simple words; names the exact file and the faulty expression; says what is wrong and what the fix is; has no filler or corporate words; is at most about 8 lines. A short note on how the cause was checked, or on what could not be checked, is evidence the rules ask for, not filler."
     }
   ]
 }

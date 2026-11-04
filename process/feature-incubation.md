@@ -38,6 +38,8 @@ A feature is ready when **every** line is true. Agents may say "I think it's rea
 - [ ] Outcome and out-of-scope written; no open questions.
 - [ ] Every task is ≤ 400 changed non-test lines and ≤ 10 files, and names those files.
 - [ ] Every task has a **check that passes or fails** (a test, a command, a script) and a demo step.
+- [ ] No task leaves a design choice to the builder (schema, API path, dependency, edge-case
+      handling): each is decided in the spec. Choices made mid-build are where builds go wrong.
 - [ ] Tasks are ordered, with dependencies listed. Each can merge on its own without breaking main.
 - [ ] Regression risks listed, with rollback per task. Flags named if behaviour changes.
 - [ ] Nothing left marked `[to verify]`.
