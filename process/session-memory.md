@@ -24,3 +24,19 @@ Why: agents start cold. What one session learns must be findable by the next, in
   decisions are append-only; a killed idea gets its reason written down.
 - Lasting rules learned in a session go into this base (with why and source), not only into the
   agent's private memory.
+
+## Before a session ends
+
+Why: once a session is closed or archived, its open threads live only in a chat nobody reopens.
+
+Applies when I ask to close or archive a session, and when a session ends with a question
+unanswered or work unfinished.
+
+- Write each open item to the project's task list: the one it already uses (GitHub issues, a
+  feature's `tasks.json` and `PROGRESS.md`), else `.ai/TODO.md` (create it if missing). Don't
+  start a second list.
+- One entry per item: what is open, why it stopped (waiting on my answer, blocked, out of scope),
+  and where the context is (file, branch, PR, command).
+- An unanswered question goes in as a question, with your recommended answer.
+- Commit the update locally. The final message says what was written and where, or "nothing left
+  open".

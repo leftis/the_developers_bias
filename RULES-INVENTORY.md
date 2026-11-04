@@ -84,6 +84,8 @@ that came up in more than one project are the core of the framework.
 - Check decisions before architecture choices; log new ones
 - Append-only decision log per item; killing an idea is a valid outcome
 - Keep project facts (IDs, regions, URLs) in the agent file, and mark stale ones
+- Before a session closes or archives, persist open items and unanswered questions to the
+  project's task list (added 2026-11-04 at my request)
 
 ## 8. Platform playbooks (project-type specific)
 
