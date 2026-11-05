@@ -24,6 +24,17 @@
 - Give a recommendation with the reasoning, not a menu of options. Prefer concrete next actions
   over broad surveys. I work solo: everything must be buildable and runnable by one person.
 
+## Be practical
+
+Why: clients and friends see what we ask for and what we change. Oversized asks look careless and
+cost them time.
+
+- Size asks to what the page or system actually uses, not to the maximum it could take. Example: a
+  banner shown at most 1920 px wide needs about a 2400 px file, not 3840 px.
+- Pick the simplest instruction that works ("keep the piece centred") over a precise rule nobody
+  will follow ("keep it inside 2080 × 520, left of centre").
+- Keep changes small and plain. If something bigger would be nicer, say so, but don't do it unasked.
+
 ## When I'm away
 
 When I say I'll review at the end ("resolve it yourself", "KISS", "no regressions"):
