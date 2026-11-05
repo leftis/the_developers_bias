@@ -77,6 +77,8 @@ that came up in more than one project are the core of the framework.
 - Don't sweep my filesystem with shell; ask where things are
 - Ask before anything other people see or that is hard to undo
 - Design changes: run the design-taste skills first, ask which ones, get a go before building
+- Be practical: size asks and changes to what is actually used, not the maximum; clients see our
+  work (from a Shopify client project, 2026-11-05)
 
 ## 7. Session memory and project knowledge
 

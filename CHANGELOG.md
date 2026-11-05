@@ -4,6 +4,9 @@ Newest first. Tag each release `vYYYY.MM.DD` so a machine can install a known ve
 
 ## [Unreleased]
 
+- `core/working-with-me.md`: new "Be practical" section. Size asks (image files, specs) to what
+  the page uses, give simple instructions, keep changes small. Why: an agent asked a client for
+  3840 px banners where 2400 px was enough, and clients see these asks.
 - `process/session-memory.md`: new "Before a session ends" section. When a session is closed,
   archived, or ends with something open, the agent writes each open item to the project's task
   list (its tracker, else `.ai/TODO.md`). Why: open threads were lost with archived sessions.
